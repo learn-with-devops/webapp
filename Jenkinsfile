@@ -1,5 +1,7 @@
 #!groovy
 
+def branch
+
 pipeline{
 
 	agent any
@@ -21,6 +23,10 @@ pipeline{
 			
 				echo "Downloding the code from github"
 				checkout scm
+				script{
+					branch = env.BRANCH_NAME
+					echo "The current branch is ${branch}"
+				}
 			}
 		}
 
@@ -48,16 +54,46 @@ pipeline{
 			}
 		}
 
-		stage ('Deploy the code'){
+		stage ('Deploy the code in to Dev'){
 
-			steps{
-			
-				script{
+			when {
+                expression { branch == 'dev'}
+               }
+            steps{
+                script{
 
-					echo "Deploying  the code"
-					sh 'sudo sh /root/application_deployment.sh'
-				}
-			}
+                    echo "Dev code is deploying"
+                    sh 'sudo sh /root/dev_branch.sh'
+                    }
+                }
+		}
+
+		stage ('Deploy the code in to QA'){
+
+			when {
+                expression { branch == 'qa'}
+               }
+            steps{
+                script{
+
+                    echo "Dev code is deploying"
+                    sh 'sudo sh /root/qa_branch.sh'
+                    }
+                }
+		}
+
+		stage ('Deploy the code in to Master'){
+
+			when {
+                expression { branch == 'master'}
+               }
+            steps{
+                script{
+
+                    echo "Dev code is deploying"
+                    sh 'sudo sh /root/master_branch.sh'
+                    }
+                }
 		}
 	}
 }
