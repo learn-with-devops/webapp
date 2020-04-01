@@ -20,7 +20,7 @@ pipeline{
 			steps{
 			
 				echo "Downloding the code from github"
-				ckeckout scm
+				checkout scm
 			}
 		}
 
