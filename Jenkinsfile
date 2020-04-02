@@ -95,5 +95,12 @@ pipeline{
                     }
                 }
 		}
+		
+	    stage('Finally Calling Other Job')
+	          {
+		steps {
+			build job: 'testing_job', quietPeriod: 0
+		}
+	}
 	}
 }
